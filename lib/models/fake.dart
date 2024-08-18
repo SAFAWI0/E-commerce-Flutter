@@ -12,6 +12,7 @@ class Product {
   });
 }
 
+//safaa
 // list of products
 List<Product> products = [
   Product(
