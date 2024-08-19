@@ -1,8 +1,10 @@
 import 'package:app/constanta.dart';
+import 'package:app/screens/Login.dart';
+import 'package:app/test/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
-AppBar HomeAppBar() {
+AppBar HomeAppBar(BuildContext context) {
   return AppBar(
     backgroundColor: kPrimaryColor,
     elevation: 0,
@@ -13,12 +15,17 @@ AppBar HomeAppBar() {
     centerTitle: false,
     actions: [
       IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        },
         icon: Icon(
-          Icons.menu,
+          Icons.login,
           color: kBackgroundColor,
         ),
-      )
+      ),
     ],
   );
 }

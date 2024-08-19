@@ -1,5 +1,6 @@
 import 'package:app/constanta.dart';
 import 'package:app/models/fake.dart';
+import 'package:app/widgets/Ditails/DetailsAppBar.dart';
 import 'package:app/widgets/Ditails/DitailsBody.dart';
 import 'package:flutter/material.dart';
 
@@ -12,28 +13,9 @@ class DitailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
+      appBar: DetailsAppBar(context),
       body: DitailsBody(
         product: product,
-      ),
-      appBar: DetailsAppBar(context),
-    );
-  }
-
-  AppBar DetailsAppBar(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: kBackgroundColor,
-      leading: IconButton(
-        padding: EdgeInsets.only(
-          right: kDefaultPadding,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: Icon(Icons.arrow_back),
-      ),
-      title: Text(
-        "رجوع",
       ),
     );
   }
