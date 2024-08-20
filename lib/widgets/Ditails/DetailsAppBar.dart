@@ -6,9 +6,6 @@ AppBar DetailsAppBar(BuildContext context) {
     elevation: 0,
     backgroundColor: kBackgroundColor,
     leading: IconButton(
-      padding: EdgeInsets.only(
-        right: kDefaultPadding,
-      ),
       onPressed: () {
         Navigator.pop(context);
       },

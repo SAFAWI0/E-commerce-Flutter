@@ -1,6 +1,5 @@
 import 'package:app/constanta.dart';
 import 'package:app/screens/Login.dart';
-import 'package:app/test/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +12,7 @@ AppBar HomeAppBar(BuildContext context) {
       style: GoogleFonts.getFont("Almarai", color: kBackgroundColor),
     ),
     centerTitle: false,
+    automaticallyImplyLeading: false, //ازاله زر الرجوع
     actions: [
       IconButton(
         onPressed: () {

@@ -1,5 +1,6 @@
 import 'package:app/constanta.dart';
 import 'package:app/screens/HomeScreen.dart';
+import 'package:app/screens/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: [Locale("ar", "AE")],
       locale: Locale("ar", "AE"),
 
-      home: HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
