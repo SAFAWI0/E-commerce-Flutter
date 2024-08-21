@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: HomeAppBar(context),
       body: Body(),
-      backgroundColor: Color(0xFF219ebc),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
     );
   }
 }

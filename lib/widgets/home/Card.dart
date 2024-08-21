@@ -1,5 +1,5 @@
 import 'package:app/constanta.dart';
-import 'package:app/models/fake.dart';
+import 'package:app/models/Api.dart';
 import 'package:flutter/material.dart';
 
 class CCard extends StatelessWidget {
@@ -32,7 +32,7 @@ class CCard extends StatelessWidget {
               height: 166,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
-                  color: Colors.white,
+                  color: Color(0xFF219ebc),
                   boxShadow: [
                     BoxShadow(
                       offset: Offset(0, 15),
@@ -70,8 +70,12 @@ class CCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
                       child: Text(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                         product.title,
-                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                     Spacer(),
@@ -79,13 +83,15 @@ class CCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding),
                       child: Text(
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                         product.subTitle,
-                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
                     Spacer(),
                     Padding(
-                      padding: const EdgeInsets.all(kDefaultPadding),
+                      padding: const EdgeInsets.all(8),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: kDefaultPadding * 1.5,
@@ -95,7 +101,9 @@ class CCard extends StatelessWidget {
                           color: kSecondaryColor,
                           borderRadius: BorderRadius.circular(22),
                         ),
-                        child: Text("السعر: \$ ${product.price}    "),
+                        child: Text(
+                          "السعر: \$ ${product.price}",
+                        ),
                       ),
                     ),
                   ],

@@ -1,5 +1,7 @@
 import 'package:app/screens/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -13,7 +15,104 @@ class Register extends State<RegisterScreen> {
   final TextEditingController password = TextEditingController();
   final TextEditingController phonenumber = TextEditingController();
   bool obscurePassword = true;
-  bool Loading = false;
+  bool Loading = true;
+
+  void register(BuildContext context) async {
+    String pattern = r'^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$';
+    RegExp regExp = RegExp(pattern);
+    if (!regExp.hasMatch(password.text)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("خطأ"),
+            content:
+                Text("الرمز يجب أن يحتوي على أحرف كبيرة، أرقام، ورموز خاصة."),
+            actions: [
+              TextButton(
+                child: Text("حسنًا"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    setState(() {
+      Loading = true;
+    });
+    var headers = {'Authorization': 'Basic MTExODQ5ODE6NjAtZGF5ZnJlZXRyaWFs'};
+
+    var dio = Dio();
+    var data = {
+      "name": fullName.text,
+      "userName": userName.text,
+      "password": password.text,
+      "email": email.text,
+      "phoneNumber": phonenumber.text,
+    };
+    var response = await dio.request(
+      'http://safaasafaa-001-site1.htempurl.com/api/registration',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: json.encode(data),
+    );
+    setState(() {
+      Loading = true;
+    });
+    if (response.statusCode == 200) {
+      print(json.encode(response.data));
+      // Show  alert
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("نجاح"),
+            content: Text("عملية انشاء الحساب نجحت"),
+            actions: [
+              TextButton(
+                child: Text("حسنًا"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      print("error: ${response.statusMessage}");
+
+      // Show error alert
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("خطأ"),
+            content: Text("فشل عملية انشاء الحساب: ${response.statusMessage}"),
+            actions: [
+              TextButton(
+                child: Text("حسنًا"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -166,12 +265,7 @@ class Register extends State<RegisterScreen> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
-                            // Register(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                            );
+                            register(context);
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: Colors.blue,

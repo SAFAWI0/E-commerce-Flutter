@@ -10,7 +10,10 @@ class Order extends StatelessWidget {
   final TextEditingController note = TextEditingController();
 
   void sent(BuildContext context) async {
-    var headers = {'Authorization': 'Basic MTExODQ5ODE6NjAtZGF5ZnJlZXRyaWFs'};
+    var headers = {
+      'Authorization': 'Basic MTExODQ5ODE6NjAtZGF5ZnJlZXRyaWFs',
+      'Content-Type': 'application/json',
+    };
 
     var dio = Dio();
     var data = {
@@ -20,43 +23,63 @@ class Order extends StatelessWidget {
       "street": street.text,
       "note": note.text,
     };
-    var response = await dio.request(
-      '.....',
-      options: Options(
-        method: 'POST',
-        headers: headers,
-      ),
-      data: json.encode(data),
-    );
-    if (response.statusCode == 200) {
-      print(json.encode(response.data));
-      // Show success alert
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("نجاح"),
-            content: Text("تم الشراء بنجاح"),
-            actions: [
-              TextButton(
-                child: Text("حسنًا"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+
+    try {
+      var response = await dio.post(
+        'http://safaasafaa-001-site1.htempurl.com/api/v1/Order/addorder',
+        options: Options(
+          headers: headers,
+        ),
+        data: json.encode(data),
       );
-    } else {
-      print(response.statusMessage);
-      // Show error alert
+
+      if (response.statusCode == 200) {
+        // Show success alert
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("نجاح"),
+              content: Text("تم الحجز بنجاح"),
+              actions: [
+                TextButton(
+                  child: Text("حسنًا"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Show error alert
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("خطأ"),
+              content: Text("فشل الشراء: ${response.statusMessage}"),
+              actions: [
+                TextButton(
+                  child: Text("حسنًا"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      // Handle exceptions
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("خطأ"),
-            content: Text("فشل الشراء: ${response.statusMessage}"),
+            content: Text("حدث خطأ: $e"),
             actions: [
               TextButton(
                 child: Text("حسنًا"),
@@ -83,17 +106,14 @@ class Order extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 "Full Name",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontSize: 18),
               ),
             ),
             TextFormField(
+              controller: fullName,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -104,17 +124,14 @@ class Order extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
-                "Phone ",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                "Phone",
+                style: TextStyle(fontSize: 18),
               ),
             ),
             TextFormField(
+              controller: phone,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -125,17 +142,14 @@ class Order extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 "City",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontSize: 18),
               ),
             ),
             TextFormField(
+              controller: city,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -146,17 +160,14 @@ class Order extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 "Street Address",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontSize: 18),
               ),
             ),
             TextFormField(
+              controller: street,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -167,17 +178,14 @@ class Order extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
-                "Note ",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                "Note",
+                style: TextStyle(fontSize: 18),
               ),
             ),
             TextFormField(
+              controller: note,
               maxLines: 5,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -195,18 +203,18 @@ class Order extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {
                     sent(context);
-                    print("object");
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.red,
                     padding: EdgeInsets.all(12),
                   ),
                   child: Text(
-                    "Sent",
+                    "Send",
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

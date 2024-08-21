@@ -1,9 +1,9 @@
-import 'package:app/constanta.dart';
-import 'package:app/screens/HomeScreen.dart';
-import 'package:app/screens/Register.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:app/screens/HomeScreen.dart';
+import 'package:app/screens/Register.dart';
+import 'package:app/constanta.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -11,7 +11,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class Login extends State<LoginScreen> {
-  final TextEditingController email = TextEditingController();
+  final TextEditingController userName = TextEditingController();
   final TextEditingController password = TextEditingController();
   bool obscurePassword = true;
   bool Loading = false;
@@ -20,57 +20,100 @@ class Login extends State<LoginScreen> {
     setState(() {
       Loading = true;
     });
-    var headers = {'Authorization': 'Basic MTExODQ5ODE6NjAtZGF5ZnJlZXRyaWFs'};
 
+    var headers = {'Authorization': 'Basic MTExODQ5ODE6NjAtZGF5ZnJlZXRyaWFs'};
     var dio = Dio();
     var data = {
-      "email": email.text,
+      "userName": userName.text,
       "password": password.text,
     };
-    var response = await dio.request(
-      'http://safaasafaa-001-site1.htempurl.com/api/v1/user/addusers',
-      options: Options(
-        method: 'POST',
-        headers: headers,
-      ),
-      data: json.encode(data),
-    );
-    setState(() {
-      Loading = false;
-    });
-    if (response.statusCode == 200) {
-      print(json.encode(response.data));
-      // Show success alert
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("نجاح"),
-            content: Text("تم التسجيل بنجاح"),
-            actions: [
-              TextButton(
-                child: Text("حسنًا"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                  );
-                },
-              ),
-            ],
-          );
-        },
+
+    try {
+      var response = await dio.post(
+        'http://safaasafaa-001-site1.htempurl.com/api/login',
+        options: Options(headers: headers),
+        data: json.encode(data),
       );
-    } else {
-      print(response.statusMessage);
-      // Show error alert
+
+      setState(() {
+        Loading = false;
+      });
+
+      if (response.statusCode == 200) {
+        var responseData = response.data;
+
+        if (responseData['success']) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("نجاح"),
+                content: Text("تم تسجيل الدخول بنجاح"),
+                actions: [
+                  TextButton(
+                    child: Text("حسنًا"),
+                    onPressed: () {
+                      Navigator.of(context).pop(); 
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          String errorMessage = responseData['message'] ?? "فشل تسجيل الدخول";
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("خطأ"),
+                content: Text(errorMessage),
+                actions: [
+                  TextButton(
+                    child: Text("حسنًا"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("خطأ"),
+              content: Text("حدث خطأ غير متوقع: ${response.statusMessage}"),
+              actions: [
+                TextButton(
+                  child: Text("حسنًا"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      setState(() {
+        Loading = false;
+      });
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("خطأ"),
-            content: Text("فشل التسجيل: ${response.statusMessage}"),
+            content: Text("حدث خطأ: $e"),
             actions: [
               TextButton(
                 child: Text("حسنًا"),
@@ -90,7 +133,7 @@ class Login extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('تسجيل الدخول'),
-        automaticallyImplyLeading: false, //ازاله زر الرجوع
+        automaticallyImplyLeading: false, // إزالة زر الرجوع
       ),
       body: Stack(
         children: [
@@ -107,9 +150,7 @@ class Login extends State<LoginScreen> {
                           fontWeight: FontWeight.bold,
                           color: kPrimaryColor),
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
+                    SizedBox(height: 50),
                     Text(
                       "To Continue Log-in",
                       style: TextStyle(
@@ -117,13 +158,11 @@ class Login extends State<LoginScreen> {
                           fontWeight: FontWeight.bold,
                           color: kPrimaryColor),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     TextFormField(
-                      controller: email,
+                      controller: userName,
                       decoration: InputDecoration(
-                        labelText: "Email",
+                        labelText: "UserName",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
@@ -136,11 +175,8 @@ class Login extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     TextFormField(
-                      // obscureText: true, //****password
                       obscureText: obscurePassword,
                       controller: password,
                       decoration: InputDecoration(
@@ -179,9 +215,7 @@ class Login extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
                       child: TextButton(
@@ -201,9 +235,7 @@ class Login extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

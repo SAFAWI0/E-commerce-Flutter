@@ -1,5 +1,5 @@
 import 'package:app/constanta.dart';
-import 'package:app/models/fake.dart';
+import 'package:app/models/Api.dart';
 import 'package:app/widgets/Ditails/DetailsAppBar.dart';
 import 'package:app/widgets/Ditails/DitailsBody.dart';
 import 'package:flutter/material.dart';
